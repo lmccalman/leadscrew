@@ -28,8 +28,14 @@ mod app {
     /// input on Pin 34
     type Input =  gpio::Input<pins::t41::P34>;
 
+    struct Rotary {
+        s1: gpio::Input<pins::t41::P10>,
+        s2: gpio::Input<pins::t41::P11>,
+        key: gpio::Input<pins::t41::P12>,
+    }
+
     /// pull up value should be twice input in impedance
-    const PIN_CONFIG: iomuxc::Config = iomuxc::Config::zero().set_pull_keeper(Some(iomuxc::PullKeeper::Pullup47k));
+    const PIN_PULLUP: iomuxc::Config = iomuxc::Config::zero().set_pull_keeper(Some(iomuxc::PullKeeper::Pullup47k));
 
     /// There are no resources shared across tasks.
     #[shared]
@@ -44,6 +50,8 @@ mod app {
         poller: logging::Poller,
         /// The input pin
         input: Input,
+        /// the rotary switch
+        rotary: Rotary,
     }
 
     #[init]
@@ -58,8 +66,13 @@ mod app {
         let led = board::led(&mut gpio2, pins.p13);
         let poller = logging::log::usbd(usb, logging::Interrupts::Enabled).unwrap();
 
-        iomuxc::configure(&mut pins.p34, PIN_CONFIG);
+        iomuxc::configure(&mut pins.p34, PIN_PULLUP);
         let input = gpio2.input(pins.p34);
+        let rotary = Rotary {
+            s1: gpio2.input(pins.p10),
+            s2: gpio2.input(pins.p11),
+            key: gpio2.input(pins.p12),
+        };
 
         Systick::start(
             cx.core.SYST,
@@ -68,10 +81,10 @@ mod app {
         );
 
         blink::spawn().unwrap();
-        (Shared {}, Local { led, poller, input })
+        (Shared {}, Local { led, poller, input, rotary })
     }
 
-    #[task(local = [led, input])]
+    #[task(local = [led, input, rotary])]
     async fn blink(cx: blink::Context) {
         let mut count = 0u32;
         loop {
