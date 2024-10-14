@@ -1,0 +1,6 @@
+/* Linker script for the IMXRT1060RM_rev3 (teensy 4.1) */
+MEMORY
+{
+  FLASH : ORIGIN = 0x60000000, LENGTH = 256M
+  RAM : ORIGIN = 0x00000000, LENGTH = 512K
+}
