@@ -2,4 +2,9 @@
 target = "thumbv7em-none-eabihf"
 
 [target.thumbv7em-none-eabihf]
-rustflags = ["-C", "link-arg=-nostartfiles", "-C", "link-arg=-Tlink.x"]
+rustflags = [
+  "-C", "link-arg=-Tt4link.x",
+]
+
+[env]
+DEFMT_LOG = "info"

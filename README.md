@@ -1,17 +1,10 @@
-# Leadscrew
+"""
+$ rust-objcopy -O ihex target/thumbv7em-none-eabihf/release/leadscrew-teensy leadscrew-teensy.hex
+$ teensy_loader_cli --mcu=TEENSY41 leadscrew-teensy.hex
+$ cat /dev/ttyACM0
+"""
 
-## sections of a program
+for the cat to work, check the group of that file and add user to it.
+For arch thats uucp
 
-.text -- program code, ends up in FLASH
-.rodata -- string literal or const variable -- FLASH?
-.data -- initialized global and static variables, starts after .txt
-.bss -- global uninitialized data and static uninitialized data
-
-
-
-- target: thumbv7em-none-eabihf
-
-- https://protosupplies.com/learn/prototyping-system-for-teensy-4-1-working-with-teensy-4-1-memory/
-
-
-
+to find which tty, try $ dmesg | grep tty
