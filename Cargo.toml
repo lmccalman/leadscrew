@@ -13,6 +13,9 @@ log = { version = "0.4", features = ["max_level_debug", "release_max_level_info"
 
 teensy4-panic = { version = "0.2", features = ["log"] }
 cortex-m = "0.7.7"
+tm1637-embedded-hal = "0.4.0"
+embedded-hal = "1.0.0"
+
 
 [dependencies.teensy4-bsp]
 version = "0.5"
