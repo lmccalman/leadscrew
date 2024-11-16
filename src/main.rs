@@ -96,6 +96,8 @@ mod app {
         //lpi2c1 has pin 19 clock line
         //pin 18 data line
 
+        // iomuxc::configure(&mut pins.p18, PIN_PULLUP);
+        // iomuxc::configure(&mut pins.p19, PIN_PULLUP);
         let seg7: bsp::board::Lpi2c1 = board::lpi2c(lpi2c1, pins.p19, pins.p18, board::Lpi2cClockSpeed::KHz100);
 
         // iomuxc::configure(&mut pins.p34, PIN_PULLUP);
@@ -153,10 +155,13 @@ mod app {
         if let Err(e) = cx.local.seg7.write(SLAVE_ADDR, &[0x48]) {
             log::error!("Failed to set data command mode. Error: {:?}", e);
         }
+        Systick::delay(5.millis()).await;
         // Display control: ON, max brightness
         if let Err(e) = cx.local.seg7.write(SLAVE_ADDR, &[0x71]) {
             log::error!("Failed to set max brightness. Error: {:?}", e);
         }
+        
+        Systick::delay(5.millis()).await;
 
         let digits = [1, 2, 3, 4];
         loop {
@@ -166,6 +171,7 @@ mod app {
                 if let Err(e) = cx.local.seg7.write(SLAVE_ADDR, &[DISPLAY_REGISTERS[pos]]) {
                     log::error!("Failed to write register. Error: {:?}", e);
                 }
+                Systick::delay(5.millis()).await;
                 if let Err(e) = cx.local.seg7.write(SLAVE_ADDR, &[DIGITS[digit]]) {
                     log::error!("Failed to write digit. Error: {:?}", e);
                 }
