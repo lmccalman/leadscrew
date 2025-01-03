@@ -3,6 +3,14 @@ name = "leadscrew-teensy"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+name = "leadscrew"
+path = "src/lib.rs"
+
+[[bin]]
+name = "leadscrew-bin"
+path = "src/main.rs"
+
 [dependencies]
 rtic = { version = "2", features = ["thumbv7-backend"] }
 rtic-monotonics = { version = "1", default-features = false, features = ["cortex-m-systick"] }
@@ -13,8 +21,10 @@ log = { version = "0.4", features = ["max_level_debug", "release_max_level_info"
 
 teensy4-panic = { version = "0.2", features = ["log"] }
 cortex-m = "0.7.7"
-tm1637-embedded-hal = "0.4.0"
+tm1637-embedded-hal = { version = "0.4.0", features = ["blocking", "demo"]}
 embedded-hal = "1.0.0"
+embedded-hal-async = "1.0.0"
+ssd1309 = "0.4.0"
 
 
 [dependencies.teensy4-bsp]
