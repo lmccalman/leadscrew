@@ -1,5 +1,5 @@
 [package]
-name = "leadscrew-teensy"
+name = "leadscrew"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,7 +8,7 @@ name = "leadscrew"
 path = "src/lib.rs"
 
 [[bin]]
-name = "leadscrew-bin"
+name = "leadscrew-teensy"
 path = "src/main.rs"
 
 [dependencies]

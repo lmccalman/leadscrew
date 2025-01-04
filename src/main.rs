@@ -139,30 +139,30 @@ mod app {
         let seg7 = TM1637::new(clk, dio, Tm1637Delay {}, brightness, SEG7_DELAY_US, SEG7_NUM_POSITIONS);
 
 
-        // poll_encoder::spawn().unwrap();
-        // update_seg7::spawn().unwrap();
-        blink::spawn().unwrap();
+        poll_encoder::spawn().unwrap();
+        update_seg7::spawn().unwrap();
+        // blink::spawn().unwrap();
 
         (Shared {}, Local { led, poller, rotary, seg7, enc_a, enc_b })
     }
 
-    #[task(local = [led, rotary])]
-    async fn blink(cx: blink::Context) {
-        let mut count = 0u32;
-        loop {
-            // button grounds pin so low is pressed
-            if !cx.local.rotary.key.is_set() {
-                Systick::delay(100.millis()).await;
-                cx.local.led.toggle();
-                if count % 5 == 0 {
-                    log::info!("Button is pressed!");
-                }
-            } else {
-                Systick::delay(100.millis()).await;
-            }
-            count = count.wrapping_add(1);
-        }
-    }
+    // #[task(local = [led, rotary])]
+    // async fn blink(cx: blink::Context) {
+    //     let mut count = 0u32;
+    //     loop {
+    //         // button grounds pin so low is pressed
+    //         if !cx.local.rotary.key.is_set() {
+    //             Systick::delay(100.millis()).await;
+    //             cx.local.led.toggle();
+    //             if count % 5 == 0 {
+    //                 log::info!("Button is pressed!");
+    //             }
+    //         } else {
+    //             Systick::delay(100.millis()).await;
+    //         }
+    //         count = count.wrapping_add(1);
+    //     }
+    // }
 
 
     #[task(local=[seg7])]
@@ -176,11 +176,14 @@ mod app {
         let mut counter = 0;
 
         loop {
-            let segs = [digit_byte((0 + counter) % 9),digit_byte(1), digit_byte(2), digit_byte(3)];
+            log::debug!("Seg 7");
+            let segs = [digit_byte((0 + counter) % 10),
+                        digit_byte((1 + counter) % 10),
+                        digit_byte((2 + counter) % 10), 
+                        digit_byte((3 + counter) % 10)];
             cx.local.seg7.write_segments_raw(0, &segs).await.unwrap();
             counter = counter + 1;
             Systick::delay(100.millis()).await;
-            log::info!("Seg 7");
         }
 
     }
